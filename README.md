@@ -6,7 +6,7 @@ Welcome to the React MineSweeper
 
 ## Learning Objectives
 
-- Build a Minespeeper game in React similar to [minespeeperonline](https://minesweeperonline.com/)
+- Build a Minespeeper game in React similar to [minesweeperonline](https://minesweeperonline.com/)
 - Use `git` & GitHub to commit work and open a Pull Request
 
 ## Core Criteria
