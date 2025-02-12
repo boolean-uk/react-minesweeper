@@ -50,7 +50,12 @@ function App() {
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         if (i === 0 && j === 0) continue;
-        if (x + i >= 0 && x + i < dimension && y + j >= 0 && y + j < dimension) {
+        if (
+          x + i >= 0 &&
+          x + i < dimension &&
+          y + j >= 0 &&
+          y + j < dimension
+        ) {
           if (board[x + i][y + j].isMine) neighbors++;
         }
       }
@@ -81,6 +86,10 @@ function App() {
       if (newBoard[x][y].isFlag) return;
       newBoard[x][y].isRevealed = true;
 
+      if (newBoard[x][y].neighbors === 0) {
+        clearCellsRecursion(newBoard, x, y);
+      }
+
       if (newBoard[x][y].isMine) {
         alert("Game Over");
         newBoard.forEach((row) => {
@@ -100,6 +109,27 @@ function App() {
     setBoard(newBoard);
   }
 
+  function clearCellsRecursion(board: Cell[][], x: number, y: number) {
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        if (i === 0 && j === 0) continue;
+        if (
+          x + i >= 0 &&
+          x + i < dimension &&
+          y + j >= 0 &&
+          y + j < dimension
+        ) {
+          if (!board[x + i][y + j].isRevealed) {
+            board[x + i][y + j].isRevealed = true;
+            if (board[x + i][y + j].neighbors === 0) {
+              clearCellsRecursion(board, x + i, y + j);
+            }
+          }
+        }
+      }
+    }
+  }
+
   return (
     <>
       <h1>React Minesweeper</h1>
@@ -110,10 +140,10 @@ function App() {
           placeholder="Enter the dimension"
           onChange={(e) => setDimension(parseInt(e.target.value))}
         />
-        <input 
-        type="number"
-        placeholder="Enter the number of mines"
-        onChange={(e) => setMines(parseInt(e.target.value))}
+        <input
+          type="number"
+          placeholder="Enter the number of mines"
+          onChange={(e) => setMines(parseInt(e.target.value))}
         />
         <button onClick={() => setGameStarted(true)}>New Game</button>
       </div>
