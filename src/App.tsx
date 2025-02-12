@@ -70,32 +70,32 @@ function App() {
       return; 
     }
 
-  const revealQueue = [[row, col]];
-  newBoard[row][col].revealed = true;
+    const revealQueue = [[row, col]];
+    newBoard[row][col].revealed = true;
 
-  while (revealQueue.length > 0){
-    const [currentRow, currentCol] = revealQueue.shift()!;
+    while (revealQueue.length > 0){
+      const [currentRow, currentCol] = revealQueue.shift()!;
 
-    if (newBoard[currentRow][currentCol].touchingMines === 0) {
-      checkingDirections.forEach(([x, y]) => {
-        const newRow = currentRow + x;
-        const newCol = currentCol + y;
+      if (newBoard[currentRow][currentCol].touchingMines === 0) {
+        checkingDirections.forEach(([x, y]) => {
+          const newRow = currentRow + x;
+          const newCol = currentCol + y;
 
-        if (
-          newRow >= 0 && newRow < boardSize &&
-          newCol >= 0 && newCol < boardSize &&
-          !newBoard[newRow][newCol].revealed
-        ) {
-          newBoard[newRow][newCol].revealed = true;
+          if (
+            newRow >= 0 && newRow < boardSize &&
+            newCol >= 0 && newCol < boardSize &&
+            !newBoard[newRow][newCol].revealed
+          ) {
+            newBoard[newRow][newCol].revealed = true;
 
-          if (newBoard[newRow][newCol].touchingMines === 0) {
-            revealQueue.push([newRow, newCol]);
+            if (newBoard[newRow][newCol].touchingMines === 0) {
+              revealQueue.push([newRow, newCol]);
+            }
           }
-        }
-      });
+        });
+    }
   }
-}
-    setBoard(newBoard)
+      setBoard(newBoard)
 };
 
   const setFlag = (row: number, col: number) => {
