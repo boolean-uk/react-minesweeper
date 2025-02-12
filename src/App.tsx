@@ -6,6 +6,11 @@ import React from "react";
 
 const boardSize = 10;
 const numMines = 10;
+const checkingDirections = [
+  [-1, -1], [-1, 0], [-1, 1],
+  [0, -1], [0, 1],
+  [1, -1], [1, 0], [1, 1]
+];
 
 function generateBoard() {
   let board = Array.from({ length: boardSize }, () =>
@@ -28,11 +33,6 @@ function generateBoard() {
     }
   }
 
-  const checkingDirections = [
-    [-1, -1], [-1, 0], [-1, 1],
-    [0, -1], [0, 1],
-    [1, -1], [1, 0], [1, 1]
-  ];
 
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
@@ -65,12 +65,38 @@ function App() {
     const newBoard = board.map(row => row.map(cell => ({ ...cell })));
 
     if (newBoard[row][col].mine) {
-      newBoard.forEach(row => row.forEach(cell => (cell.revealed = true)));
-    } else {
-      newBoard[row][col].revealed = true;
+      newBoard.forEach(r => r.forEach(c => c.revealed = true));
+      setBoard(newBoard);
+      return; 
     }
-    setBoard(newBoard)
+
+  const revealQueue = [[row, col]];
+  newBoard[row][col].revealed = true;
+
+  while (revealQueue.length > 0){
+    const [currentRow, currentCol] = revealQueue.shift()!;
+
+    if (newBoard[currentRow][currentCol].touchingMines === 0) {
+      checkingDirections.forEach(([x, y]) => {
+        const newRow = currentRow + x;
+        const newCol = currentCol + y;
+
+        if (
+          newRow >= 0 && newRow < boardSize &&
+          newCol >= 0 && newCol < boardSize &&
+          !newBoard[newRow][newCol].revealed
+        ) {
+          newBoard[newRow][newCol].revealed = true;
+
+          if (newBoard[newRow][newCol].touchingMines === 0) {
+            revealQueue.push([newRow, newCol]);
+          }
+        }
+      });
   }
+}
+    setBoard(newBoard)
+};
 
   const setFlag = (row: number, col: number) => {
     const newBoard = board.map(row => row.map(cell => ({ ...cell })));
@@ -81,7 +107,7 @@ function App() {
     setMinesLeft(prev => prev + (newBoard[row][col].flag ? -1 : 1));
   }
   setBoard(newBoard)
-}
+};
 
   return (
     <>
