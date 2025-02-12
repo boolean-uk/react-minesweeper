@@ -8,9 +8,8 @@ function App() {
   return (
     <>
       <h1>React Minesweeper</h1>
-      <div className="container">
-        <SquareBoard />
-      </div>  
+      <SquareBoard />
+
     </>
   );
 }

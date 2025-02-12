@@ -7,8 +7,10 @@ function Square({id,revealSquares}) {
   }
   return (
     <div id={id} className="cell" onClick={(e) => clickSquare(e)}>
-        <p className="symbol"></p>
-        <p className="symbol">{id}</p>
+        <p className='square_id'>{id}</p>
+        <div className='symbolDiv'>
+          <p className="symbol"></p>
+        </div>
     </div>
   )
 }

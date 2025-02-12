@@ -3,12 +3,13 @@ import Square from "../Square/Square"
 
 function SquareBoard() {
   const mineArrayRef = useRef(null)
-  const rowLenRef = useRef(10)
-  const colLenRef = useRef(10)
-  const pickMineSquares = (nrMines) =>
+  const rowLenRef = useRef(25)
+  const colLenRef = useRef(25)
+  const nrMinesRef = useRef(100)
+  const pickMineSquares = () =>
   {
     if(mineArrayRef.current != null) return;
-    let mineIds = Array.from({length:nrMines},(x) => 
+    let mineIds = Array.from({length:nrMinesRef.current},(x) => 
       {return Math.floor(Math.random()*(rowLenRef.current*colLenRef.current))}
     );
     mineArrayRef.current = mineIds;
@@ -16,18 +17,32 @@ function SquareBoard() {
 
   const generateSquares = () =>
   {
-    pickMineSquares(10, rowLenRef.current, colLenRef.current);
+    pickMineSquares();
     let squarIt = new Array(rowLenRef.current*colLenRef.current).fill("");
     return (squarIt.map((x, index) => (
-      <Square key={index} id={index} revealSquares={revealSquares}/>
+      <Square key={index} id={index}  revealSquares={revealSquares}/>
     )));
   }
 
-  const revealSquares = (id, squareElem) =>
+  const gameOver = () => 
+  {
+    for (let i in mineArrayRef.current)
+    {
+      let squareElem = document.getElementById(mineArrayRef.current[i]);
+      var curSymbol = squareElem.getElementsByClassName("symbol")[0];
+      curSymbol.innerText = "💣";
+      curSymbol.parentElement.parentElement.style.backgroundColor = "red";
+    }
+  }
+
+  const revealSquares = (id, squareElem, visited = []) =>
   {
     let nid =Number(id);
+    if (visited.includes(nid)) return;
+    var curSymbol = squareElem.getElementsByClassName("symbol")[0];
+    curSymbol.parentElement.style.backgroundColor= "antiquewhite";
     if(mineArrayRef.current.includes(nid))
-      squareElem.innerHTML = "B";
+      gameOver()
     else
     {
     
@@ -44,18 +59,44 @@ function SquareBoard() {
       {
         for(let j = c_trav_from; j <= c_trav_to; j++)
         {
-          let travId = (i*rowLenRef.current) + (j);
-          if(travId != (nid))
+          let travId = (i*rowLenRef.current) + j;
+          if(travId != nid)
             visit.push(travId);
+
+          if(mineArrayRef.current.includes(travId))
+            mine_count++;
         }
       }
       console.log(visit);
-      squareElem.innerHTML = "0";
+      console.log(mine_count);
+      visited.push(nid);
+      if (mine_count == 0)
+      {
+        for(let i in visit)
+        {
+          revealSquares(visit[i],document.getElementById(visit[i]), visited);
+        }
+      }
+      
+      curSymbol.innerText = mine_count;
+      
+      let color = mine_count == 0 ? "white" 
+          : mine_count == 1 ? "green" 
+          : mine_count == 2 ? "blue" 
+          : mine_count == 3 ? "yellow" 
+          : mine_count == 4 ? "red" 
+          : mine_count > 4 ? "magenta" :""
+          ; 
+      curSymbol.style["color"] = color;
+      
     }
   }
   return (
     <>
+    {/* <div style={{gridTemplateColumns:colLenRef}} className='container' > */}
+    <div style={{gridTemplateColumns:`repeat(${colLenRef.current},35px)`}} className='container' >
       {generateSquares()}
+    </div>
     </>
   )
 }
