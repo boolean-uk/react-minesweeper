@@ -27,11 +27,14 @@ function SquareBoard() {
 
   const pickMineSquares = (_nrMines, rows,cols) =>
   {
-    // if(_mineArr != null) return;
+    let tempSquares = Array.from({length:rows*cols},(x,index) => {return index });
+
     let mineIds = Array.from({length:options.nrMines},(x) => 
       {
-        //TODO: do not allow for multiple bombs on one index...
-        return Math.floor(Math.random()*(rows*cols))
+        let r = Math.floor(Math.random()*(tempSquares.length));
+        let pickedIndex = tempSquares[r];
+        tempSquares = [...tempSquares.filter((x,index) => index !== r )]
+        return pickedIndex;
       }
     );
     setMineArray(mineIds);
