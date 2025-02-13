@@ -1,6 +1,25 @@
 * {
   margin: 0;
 }
+.HUD{
+  display: flex;
+  width: 55px;
+  flex-direction: column;
+  margin-left: auto;
+}
+
+#gamepanel{
+  background-color: green;
+  border-radius: 5px 5px 0px 0px;
+  padding: 10px;
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 0;
+  border-left: 3px #444444 solid;
+  border-right: 3px #444444 solid;
+  border-top: 2px #444444 solid;
+}
+
 .cell {
   background-color: silver;
   height: 100%;
@@ -20,12 +39,15 @@
   padding: 10px;
   margin: auto;
   background-color: #7a7474;
-  margin-top: 20px;
   display: grid;
   grid-auto-rows: 35px; /* sets height */
   gap: 10px; /* gap between cells */
   border-radius: 10px;
   border: 5px solid #444444;
+  margin-top: 0px;
+  min-width: 52%;
+  justify-content: center;
+  
 }
 
 .symbolDiv {
