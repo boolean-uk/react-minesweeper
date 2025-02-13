@@ -8,22 +8,16 @@ function SquareBoard() {
   const [squareArray, setSquareArray] = useState([])
   const [rowLen, setRowLen]   = useState(0)
   const [colLen, setColLen]   = useState(0)
-  const [nrMines, setNrMines] = useState(0)
-  // rowLen = options.nrRow
-  // colLen = options.nrRow
-  // nrMines = options.nrMines
   useEffect(() => {
     
     setRowLen(options.nrRow)
     setColLen(options.nrCol)
-    setNrMines(options.nrMines)
     setSquareArray(Array.from({length:options.nrRow*options.nrCol}, x => ""));
     pickMineSquares(options.nrMines, options.nrRow, options.nrCol);
-    
+
   },
   [options]
   );
-
 
   const pickMineSquares = (_nrMines, rows,cols) =>
   {
@@ -39,16 +33,6 @@ function SquareBoard() {
     );
     setMineArray(mineIds);
   }
-
-  // const generateSquares = () =>
-  // {
-    
-    
-  //   // let squarIt =  Array(rowLen*colLen).fill("");
-  //   return (squareArray.map((x, index) => (
-  //     <Square key={index} id={index}  revealSquares={revealSquares}/>
-  //   )));
-  // }
 
   const gameOver = () => 
   {
@@ -120,18 +104,13 @@ function SquareBoard() {
   }
   return (
     <>
-    {/* <div style={{gridTemplateColumns:colLenRef}} className='container' > */}
     <div style={{gridTemplateColumns:`repeat(${colLen},35px)`}} className='container' >
-      {/* {generateSquares()} */}
       {squareArray.map((x,index) => {
 
         return (
           <Square key={index} id={index}  revealSquares={revealSquares}/>
         );
       })}
-      {/* {Array.from({length:rowLen*colLen}).map((x,index) => (
-      <Square key={index} id={index}  revealSquares={revealSquares}/>
-      ))} */}
     </div>
     </>
   )
