@@ -8,15 +8,24 @@ function SquareBoard() {
   const [squareArray, setSquareArray] = useState([])
   const [rowLen, setRowLen]   = useState(0)
   const [colLen, setColLen]   = useState(0)
+  const [clear, setClear] = useState(false)
   useEffect(() => {
     
     setRowLen(options.nrRow)
     setColLen(options.nrCol)
     setSquareArray(Array.from({length:options.nrRow*options.nrCol}, x => ""));
     pickMineSquares(options.nrMines, options.nrRow, options.nrCol);
-
+    
+    setClear(true);
   },
   [options]
+  );
+
+  useEffect(() => {
+    if(clear)
+      setClear(false);
+  },
+  [clear]
   );
 
   const pickMineSquares = (_nrMines, rows,cols) =>
@@ -102,15 +111,22 @@ function SquareBoard() {
       
     }
   }
+
+  const stupidFunc = () => {
+    if (clear) 
+    {
+      return (<></>);
+    }
+    else 
+      return squareArray.map((x,index) => {
+          return (<Square key={index} id={index}  revealSquares={revealSquares}/>);
+        })
+  }
+
   return (
     <>
     <div style={{gridTemplateColumns:`repeat(${colLen},35px)`}} className='container' >
-      {squareArray.map((x,index) => {
-
-        return (
-          <Square key={index} id={index}  revealSquares={revealSquares}/>
-        );
-      })}
+      {stupidFunc()}
     </div>
     </>
   )
