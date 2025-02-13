@@ -9,9 +9,9 @@ export const GameContext = createContext();
 
 function App() {
   const [options, setOptions] = useState({
-    nrMines : 10, 
-    nrCol : 10, 
-    nrRow : 10
+    nrMines : 10,     
+    nrCol   : 10,     
+    nrRow   : 10   
   })
 
   return (

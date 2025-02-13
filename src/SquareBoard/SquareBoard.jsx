@@ -30,7 +30,7 @@ function SquareBoard() {
     // if(_mineArr != null) return;
     let mineIds = Array.from({length:options.nrMines},(x) => 
       {
-        
+        //TODO: do not allow for multiple bombs on one index...
         return Math.floor(Math.random()*(rows*cols))
       }
     );
@@ -70,7 +70,8 @@ function SquareBoard() {
     {
     
       let c_index = (nid %  (colLen));
-      let r_index = Math.floor(nid / (rowLen) );
+      let r_index = Math.floor(nid / (colLen) );
+
       
       let c_trav_from = Math.max(c_index-1,0);
       let c_trav_to   = Math.min(c_index+1,colLen-1);
@@ -82,8 +83,7 @@ function SquareBoard() {
       {
         for(let j = c_trav_from; j <= c_trav_to; j++)
         {
-          // NOTE: This is WIP; has a bug, have solution, not implemented yet....
-          let travId = (i*rowLen) + j;
+          let travId = (i*colLen) + j;
           if(travId != nid)
             visit.push(travId);
 
