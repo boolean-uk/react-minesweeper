@@ -3,7 +3,11 @@ import Square from "../Square/Square"
 import { GameContext } from '../App'
 
 function SquareBoard() {
-  const {options, setOptions,started,setStarted, gameOver,setGameOver, setNrFlipped} = useContext(GameContext)
+  const {options, setOptions,
+        started,setStarted, 
+        gameOver,setGameOver, 
+        gameWon, setGameWon,
+        setNrFlipped} = useContext(GameContext)
   const [mineArray, setMineArray] = useState(null)
   const [squareArray, setSquareArray] = useState([])
   const [rowLen, setRowLen]   = useState(0)
@@ -54,6 +58,8 @@ function SquareBoard() {
     
     // Placing pressed bomb first will result in a more pleasent animation
     let tempArr = [bombId,...mineArray.filter(x => x != bombId)];
+    let container = document.getElementById("effects");
+    container.classList.add("shakeEffect");
     for (let i in tempArr)
     {
       let squareElem = document.getElementById(tempArr[i]);
@@ -62,13 +68,28 @@ function SquareBoard() {
       curSymbol.parentElement.parentElement.style.backgroundColor = "red";
       curSymbol.style.textShadow = "rgb(255 240 55) 0px 0px 5px";
       curSymbol.parentElement.parentElement.classList.add("blowUp")
-      curSymbol.classList.add("blowUp")
+      curSymbol.classList.add("blowUp");
+      container.classList.add("shakeEffect");
       await sleep(50);
     }
     setGameOver(true);
   }
 
+  
   const revealSquares = async(id, squareElem, visited = []) =>
+  {
+    await new Promise( async(res, rej) => {
+      await revealSquares_recursive(id, squareElem, visited);
+      res();
+    }).then(res => {
+      // HANDLE WINNING SCENARIO
+      let flipped = Object.entries(document.querySelectorAll(".symbol")).map(x=>x[1]).filter(x => x.hasAttribute("flipped"));
+      if (flipped.length + options.nrMines === options.nrCol*options.nrRow)
+        setGameWon(true);
+    })
+  }
+
+  const revealSquares_recursive = async(id, squareElem, visited = []) =>
   {
     if (gameOver) return;
     if (!started) setStarted(true);
@@ -117,11 +138,12 @@ function SquareBoard() {
       visited.push(nid);
       if (mine_count == 0)
       {
+        curSymbol.innerText = mine_count;
+        await sleep(.1);
         for(let i in visit)
         {
-          revealSquares(visit[i],document.getElementById(visit[i]), visited);
           document.getElementById(visit[i]).classList.add("swell_spin_dance");
-          await sleep(5);
+          await revealSquares_recursive(visit[i],document.getElementById(visit[i]), visited);
         }
       }
       

@@ -17,6 +17,7 @@ function App() {
     
   })
   const [started,setStarted] = useState(false);
+  const [gameWon,setGameWon] = useState(false);
   const [gameOver,setGameOver] = useState(false);
   const [nrFlipped,setNrFlipped] = useState(0);
 
@@ -29,6 +30,7 @@ function App() {
             started,setStarted,
             gameOver,setGameOver,
             nrFlipped,setNrFlipped,
+            gameWon,setGameWon,
           }}>
           <GamePanel />
           <SquareBoard />

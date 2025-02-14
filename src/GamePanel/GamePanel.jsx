@@ -5,7 +5,8 @@ function GamePanel() {
   const {options,setOptions, 
         started, setStarted,
         gameOver, setGameOver, 
-        nrFlipped, setNrFlipped } = useContext(GameContext)
+        nrFlipped, setNrFlipped,
+        gameWon, setGameWon } = useContext(GameContext)
   const [nrRevealedSquares, setNrRevealedSquares] = useState(0);
   const [elapsedTimeMin, setElsapedTimeMin] = useState(0);
   const [elapsedTimeSec, setElsapedTimeSec] = useState(0);
@@ -29,6 +30,18 @@ function GamePanel() {
     }
   },
   [gameOver]
+  );
+  useEffect(() => {
+    if(gameWon)
+    {
+      clearInterval(timer);
+      setTimer(null);
+      console.log("Winner winner chicken dinner");
+      let l = Array.from(document.querySelectorAll(".symbol")).filter(x => x.hasAttribute("flipped"));
+      setNrRevealedSquares(l.length);
+    }
+  },
+  [gameWon]
   );
 
   const startTimer = () => {
@@ -70,6 +83,7 @@ function GamePanel() {
     setOptions({...options, reset: true});
     setStarted(false);
     setGameOver(false);
+    setGameWon(false);
     setNrFlipped(0);
     setElsapedTimeMin(0);
     setElsapedTimeSec(0);
@@ -82,7 +96,12 @@ function GamePanel() {
           <label>Player Name:</label>
           <input type="text" name={"playername"} disabled={started} value={options.playername}  onChange={(e) =>handleChange(e)}  ></input>
           <div className='HUD_buttons'>
-            <button style={{visibility:started?"visible":"hidden"}} onClick={() => handleResetPress()}>Reset</button>
+            <button className={gameOver||gameWon ? "beat" : ""} style={{
+              visibility:started?"visible":"hidden",
+              borderRadius:"5px",
+              boxShadow: gameOver||gameWon ? "0px 0px 20px rgb(219, 252, 31), inset 0px 0px 5px rgb(52, 150, 7)" : "inset 0px 0px 5px rgb(52, 150, 7)",
+              border: gameOver||gameWon ? "3px solid rgb(219, 252, 31)" : "3px solid rgb(0, 0, 0)"
+              }} onClick={() => handleResetPress()}>Reset</button>
           </div>
           <div id='playtime'>
             <div id="minutes" className='timeBoxes'>{getElapsedMin()}</div>
@@ -91,8 +110,8 @@ function GamePanel() {
           </div>
 
         </div>
-        <div id="FinalScoreBoard" style={{visibility:gameOver?"visible":"hidden"}}>
-          <h3>Game Over</h3>
+        <div id="FinalScoreBoard" className={gameOver||gameWon ? "swell" : ""} style={{visibility:gameOver||gameWon?"visible":"hidden"}}>
+          <h3>{gameOver ? "Game Over" : "Winner Winner chicken dinner"}</h3>
           <div className='scoreboardinfo'>
             <div>
               <label htmlFor="nrRevealedSquares">Revealed Tiles</label>
