@@ -129,6 +129,24 @@ div#FinalScoreBoard {
   
 }
 
+#playtime_flagCounter{
+  float: left;
+  display: flex;
+
+}
+
+#flagsCounter{ 
+  background-color: white;
+  width: max-content;
+  height: min-content;
+  padding: 2px;
+  margin: 5px;
+  border-radius: 2.5px;
+  display: block;
+  font-size: 15px;
+  color: red;
+}
+
 .symbolDiv {
   display: flex;
   height: calc(100% - 8px);
@@ -251,6 +269,52 @@ div#FinalScoreBoard {
   /* dance_symbolDivAnim  0.55s   4  ease-in alternate-reverse, */
   
 }
+
+@keyframes pulseEffect {
+  0% { scale: 1;           }
+  /* 25% {scale: 1.05;         } */
+  50% {scale: 1.15;          }
+  /* 75% {scale: 1.05;         } */
+  100% {scale: 1;          }
+}
+@keyframes pulseOutEffect {
+  0% { scale: 1.1;           }
+  100% {scale: 1;          }
+}
+.resetButton:hover{
+  cursor: pointer;
+}
+.cell:hover {
+  /* animation: pulseEffect 0.35s infinite ease-in-out both; */
+  /* animation-play-state: running; */
+  /* animation-play-state: paused; */
+  /* transition: scale(1.0) 1.3s ease-out 1; */
+  /* animation: pulseEffect 0.35s infinite ease-in-out ; */
+  /* animation-name: pulseEffect;
+  animation-timing-function: ease-in-out;
+  animation-duration: 0.35s;
+  animation-iteration-count: infinite; */
+  /* animation: pulseEffect 0.35s infinite ease-in-out ; */
+  z-index: 5;
+  cursor: pointer;
+
+}
+.cellHover {
+
+  animation: pulseEffect 0.35s infinite ease-in-out ;
+  /* transform: scale(1.0);
+  transition: transform 0.3s  ease-out ; */
+  /* animation-play-state: paused */
+  
+  /* animation: pulseOutEffect 0.65s 1 ease-in-out both; */
+}
+
+/* .cell:not(:hover) 
+{
+  animation: none; 
+  transition: scale (1.0); 
+} 
+*/
 
 /* #effects {
   box-shadow: 0px 0px 60px black, inset 0px 0px 167px black;

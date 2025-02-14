@@ -6,7 +6,8 @@ function GamePanel() {
         started, setStarted,
         gameOver, setGameOver, 
         nrFlipped, setNrFlipped,
-        gameWon, setGameWon } = useContext(GameContext)
+        gameWon, setGameWon,
+        flags  } = useContext(GameContext)
   const [nrRevealedSquares, setNrRevealedSquares] = useState(0);
   const [elapsedTimeMin, setElsapedTimeMin] = useState(0);
   const [elapsedTimeSec, setElsapedTimeSec] = useState(0);
@@ -96,17 +97,22 @@ function GamePanel() {
           <label>Player Name:</label>
           <input type="text" name={"playername"} disabled={started} value={options.playername}  onChange={(e) =>handleChange(e)}  ></input>
           <div className='HUD_buttons'>
-            <button className={gameOver||gameWon ? "beat" : ""} style={{
+            <button  className={gameOver||gameWon ? "beat resetButton" : "resetButton"} style={{
               visibility:started?"visible":"hidden",
               borderRadius:"5px",
               boxShadow: gameOver||gameWon ? "0px 0px 20px rgb(219, 252, 31), inset 0px 0px 5px rgb(52, 150, 7)" : "inset 0px 0px 5px rgb(52, 150, 7)",
               border: gameOver||gameWon ? "3px solid rgb(219, 252, 31)" : "3px solid rgb(0, 0, 0)"
               }} onClick={() => handleResetPress()}>Reset</button>
           </div>
-          <div id='playtime'>
-            <div id="minutes" className='timeBoxes'>{getElapsedMin()}</div>
-            <div className='timeBoxes'>:</div>
-            <div id="seconds" className='timeBoxes'>{getElapsedSec()}</div>
+          <div id="playtime_flagCounter">
+            <div id='playtime'>
+              <div id="minutes" className='timeBoxes'>{getElapsedMin()}</div>
+              <div className='timeBoxes'>:</div>
+              <div id="seconds" className='timeBoxes'>{getElapsedSec()}</div>
+            </div>
+            <div id='flagsCounter'>
+            {flags}🚩
+            </div>
           </div>
 
         </div>

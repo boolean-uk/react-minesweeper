@@ -1,4 +1,4 @@
-import { useState, useRef, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -20,6 +20,10 @@ function App() {
   const [gameWon,setGameWon] = useState(false);
   const [gameOver,setGameOver] = useState(false);
   const [nrFlipped,setNrFlipped] = useState(0);
+  const [flags, setFlags] =  useState(0);
+  useEffect(()=>{
+    setFlags(options.nrMines);
+  },[options]);
 
   return (
     <>
@@ -31,6 +35,7 @@ function App() {
             gameOver,setGameOver,
             nrFlipped,setNrFlipped,
             gameWon,setGameWon,
+            flags, setFlags,
           }}>
           <GamePanel />
           <SquareBoard />
