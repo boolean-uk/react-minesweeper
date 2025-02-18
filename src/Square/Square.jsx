@@ -33,7 +33,8 @@ function Square({id,revealSquares}) {
   };
   const rightClickSquare = (e) => 
   {    
-    e.preventDefault();
+    e.preventDefault(); // Doesn't really work... (Keep in case of browser differences)
+    if(gameOver || gameWon) return; 
     var curSymbol = e.currentTarget.getElementsByClassName("symbol")[0];
     _setFlag(curSymbol);
   }

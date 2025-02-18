@@ -95,6 +95,7 @@ div#FinalScoreBoard {
   border-right: 3px #444444 solid;
   border-top: 2px #444444 solid;
   display: flex;
+  min-width: fit-content;
 }
 
 .cell {
@@ -145,6 +146,7 @@ div#FinalScoreBoard {
   display: block;
   font-size: 15px;
   color: red;
+  white-space: nowrap;
 }
 
 .symbolDiv {
