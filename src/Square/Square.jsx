@@ -50,7 +50,8 @@ function Square({id,revealSquares}) {
 
   // Prevent rightclick to open context menu...
   document.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
+    if(event.target.classList.contains("symbol") || event.target.classList.contains("symbolDiv"))
+      event.preventDefault();
   });
 
   
