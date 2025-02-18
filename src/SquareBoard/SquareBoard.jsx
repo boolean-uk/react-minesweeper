@@ -14,6 +14,11 @@ function SquareBoard() {
   const [colLen, setColLen]   = useState(0)
   const [clear,  setClear]    = useState(false)
   const [flippedTiles, setFlippedTiles] = useState([])
+  const countdbg    = useRef(0)
+  const filledTiles_c    = useRef([])
+  const flipping_nonvisited    = useRef([])
+  const flipping_order    = useRef([])
+  
   useEffect(() => {
     
     setRowLen(options.nrRow);
@@ -80,9 +85,23 @@ function SquareBoard() {
   {
     await new Promise( async(res, rej) => {
       await revealSquares_recursive(id, squareElem, visited);
+      flipping_order.current
+      for (let f in flipping_nonvisited.current)
+      {
+        let f_index = Number(f)
+
+        let elm = flipping_nonvisited.current[f_index].elm;
+        let mcount = flipping_nonvisited.current[f_index].mine_count;
+        console.log(mcount);
+
+        flip(elm, mcount)
+      }
+      countdbg.current = 0; 
+
       res();
     }).then(res => {
       // HANDLE WINNING SCENARIO
+      
       let flipped = Object.entries(document.querySelectorAll(".symbol")).map(x=>x[1]).filter(x => x.hasAttribute("flipped"));
       if (flipped.length + options.nrMines === options.nrCol*options.nrRow)
         setGameWon(true);
@@ -91,19 +110,23 @@ function SquareBoard() {
 
   const revealSquares_recursive = async(id, squareElem, visited = []) =>
   {
+    
     if (gameOver) return;
     if (!started) setStarted(true);
     let nid =Number(id);
     if (visited.includes(nid)) return;
+    
     var curSymbol = squareElem.getElementsByClassName("symbol")[0];
-    curSymbol.parentElement.style.backgroundColor= "antiquewhite";
-    curSymbol.setAttribute("flipped",true);
+    // curSymbol.parentElement.style.backgroundColor= "antiquewhite";
+    // curSymbol.setAttribute("flipped",true);
     if (!flippedTiles.includes(id))
     {
-      let newFlippedTilesArr= [...flippedTiles,id ];
-      setFlippedTiles(newFlippedTilesArr);
-      setNrFlipped(newFlippedTilesArr.length);
-      document.getElementById(id).classList.add("swell");
+      let newFlippedTilesArr= [...filledTiles_c.current,id ];
+      filledTiles_c.current = newFlippedTilesArr
+      // let newFlippedTilesArr= [...flippedTiles,id ];
+      // setFlippedTiles(newFlippedTilesArr);
+      // setNrFlipped(newFlippedTilesArr.length);
+      // document.getElementById(id).classList.add("swell");
     }
 
     if(mineArray.includes(nid))
@@ -133,32 +156,85 @@ function SquareBoard() {
             mine_count++;
         }
       }
-      console.log(visit);
-      console.log(mine_count);
+      // console.log(visit);
+      // console.log(mine_count);
+
+      flipping_nonvisited.current.push({elm: curSymbol, mine_count : mine_count })
+
       visited.push(nid);
       if (mine_count == 0)
       {
         curSymbol.innerText = mine_count;
-        await sleep(.1);
+        // await sleep(.1 / (colLen*rowLen));
+        // if (countdbg.current < 200)
+        countdbg.current++;
+        // if ((visited.length) < (colLen*rowLen)/2)
+        
+     
         for(let i in visit)
         {
-          document.getElementById(visit[i]).classList.add("swell_spin_dance");
-          await revealSquares_recursive(visit[i],document.getElementById(visit[i]), visited);
+          if(!visited.includes(visit[i]))
+          {
+            // if ((countdbg.current) % (1) == 0 && !run)
+            //   {
+            //     console.log(countdbg.current);
+            //     await sleep(0.1); 
+            //     run = true; 
+            //   } 
+            
+            // document.getElementById(visit[i]).classList.add("swell_spin_dance");
+            // flipping_nonvisited.current.push({elm: document.getElementById(visit[i]), mine_count : mine_count});
+            
+            
+            revealSquares_recursive(visit[i],document.getElementById(visit[i]), visited);
+          }
         }
-      }
+        
+       
+      } 
+
       
-      curSymbol.innerText = mine_count;
+
       
-      let color = mine_count == 0 ? "white" 
-          : mine_count == 1 ? "green" 
-          : mine_count == 2 ? "blue" 
-          : mine_count == 3 ? "yellow" 
-          : mine_count == 4 ? "red" 
-          : mine_count > 4 ? "magenta" :""
-          ; 
-      curSymbol.style["color"] = color;
+      // return mine_count;
+      
+      // curSymbol.innerText = mine_count;
+      
+      // let color = mine_count == 0 ? "white" 
+      //     : mine_count == 1 ? "green" 
+      //     : mine_count == 2 ? "blue" 
+      //     : mine_count == 3 ? "yellow" 
+      //     : mine_count == 4 ? "red" 
+      //     : mine_count > 4 ? "magenta" :""
+      //     ; 
+      // curSymbol.style["color"] = color;
       
     }
+  }
+  const flip = async (curSymbol, mine_count) => {
+    
+    // var curSymbol = squareElem.getElementsByClassName("symbol")[0];
+    curSymbol.parentElement.style.backgroundColor= "antiquewhite";
+    curSymbol.setAttribute("flipped",true);
+
+    curSymbol.innerText = mine_count;
+    if (mine_count == 0)
+    {
+      curSymbol.classList.add("swell_spin_dance");
+    }else 
+    {
+      curSymbol.classList.add("swell");
+    }
+    console.log("was here")
+    let color = mine_count == 0 ? "white" 
+        : mine_count == 1 ? "green" 
+        : mine_count == 2 ? "blue" 
+        : mine_count == 3 ? "yellow" 
+        : mine_count == 4 ? "red" 
+        : mine_count > 4 ? "magenta" :""
+        ; 
+    curSymbol.style["color"] = color;
+
   }
 
   const stupidFunc = () => {
