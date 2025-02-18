@@ -138,10 +138,10 @@ function GamePanel() {
           <input type="number" min={1} max={options.nrCol*options.nrRow} disabled={started} name={"nrMines"} value={options.nrMines}  onChange={(e) =>handleChange(e)}  ></input>
           
           <label>Columns</label>
-          <input type="number" min={1} name={"nrCol"} value={options.nrCol} disabled={started} onChange={(e) =>handleChange(e)}  ></input>
+          <input type="number" min={1} max={25 } name={"nrCol"} value={options.nrCol} disabled={started} onChange={(e) =>handleChange(e)}  ></input>
           
           <label>Rows</label>
-          <input type="number" min={1} name={"nrRow"} value={options.nrRow} disabled={started} onChange={(e) =>handleChange(e)}  ></input>
+          <input type="number" min={1} max={25} name={"nrRow"} value={options.nrRow} disabled={started} onChange={(e) =>handleChange(e)}  ></input>
         </div>        
     </div>
   )
